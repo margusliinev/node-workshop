@@ -9,8 +9,8 @@ import fs from 'fs/promises';
     const createFile = async (path: string) => {
         try {
             const existingFileHandle = await fs.open(path, 'r');
+            console.log(`The file at ${path} already exists.`);
             existingFileHandle?.close();
-            return console.log(`The file at ${path} already exists.`);
         } catch (error) {
             const newFileHandle = await fs.open(path, 'w');
             console.log(`A new file was successfully created at ${path}`);
@@ -26,19 +26,17 @@ import fs from 'fs/promises';
         }
     };
 
-    const renameFile = async (path: string, newPath: string) => {
+    const renameFile = async (oldPath: string, newPath: string) => {
         try {
-            const existingFileHandle = await fs.open(path, 'r');
-            await fs.rename(path, newPath);
-            existingFileHandle?.close();
+            await fs.rename(oldPath, newPath);
         } catch (error) {
-            console.error(`An error occurred while renaming the file at ${path}`);
+            console.error(`An error occurred while renaming the file at ${oldPath}`);
         }
     };
 
     const writeToFile = async (path: string, content: string) => {
         try {
-            const existingFileHandle = await fs.open(path, 'w');
+            const existingFileHandle = await fs.open(path, 'a');
             existingFileHandle.write(content);
             existingFileHandle.close();
         } catch (error) {
@@ -70,11 +68,14 @@ import fs from 'fs/promises';
                     const filePath = command.substring(DELETE_FILE.length + 1);
                     deleteFile(filePath);
                 } else if (command.includes('rename a file')) {
-                    const filePath = command.substring(RENAME_FILE.length + 1);
-                    renameFile(filePath, 'renamed-file.txt');
+                    const _idx = command.indexOf(' to ');
+                    const filePath = command.substring(RENAME_FILE.length + 1, _idx);
+                    const newFilePath = command.substring(_idx + 4);
+                    renameFile(filePath, newFilePath);
                 } else if (command.includes('write to a file')) {
-                    const filePath = command.substring(WRITE_TO_FILE.length + 1);
-                    const content = 'blabla';
+                    const _idx = command.indexOf(' this content:');
+                    const filePath = command.substring(WRITE_TO_FILE.length + 1, _idx);
+                    const content = command.substring(_idx + 14);
                     writeToFile(filePath, content);
                 } else {
                     console.log('Invalid command');
