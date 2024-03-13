@@ -7,44 +7,36 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
-const clearLine = (dir: Direction) => {
-    return new Promise<void>((resolve) => {
-        process.stdout.clearLine(dir, () => {
-            resolve();
-        });
-    });
+const moveCursor = (dx: Direction, dy: Direction) => {
+    process.stdout.moveCursor(dx, dy);
 };
 
-const moveCursor = (dx: Direction, dy: Direction) => {
-    return new Promise<void>((resolve) => {
-        process.stdout.moveCursor(dx, dy, () => {
-            resolve();
-        });
-    });
+const clearLine = (dir: Direction) => {
+    process.stdout.clearLine(dir);
 };
 
 const ask = async () => {
     const message = await rl.question('Enter a message > ');
-    await moveCursor(0, -1);
-    await clearLine(0);
+    moveCursor(0, -1);
+    clearLine(0);
     client.write(message);
 };
 
-const client = net.createConnection({ host: '127.0.0.1', port: 5000 }, async () => {
+const client = net.createConnection({ host: '127.0.0.1', port: 5000 }, () => {
     ask();
 });
 
-client.on('data', async (data) => {
+client.on('data', (data) => {
     console.log();
-    await moveCursor(0, -1);
-    await clearLine(0);
+    moveCursor(0, -1);
+    clearLine(0);
     console.log(data.toString('utf8'));
     ask();
 });
 
-client.on('end', async () => {
+client.on('end', () => {
     console.log();
-    await moveCursor(0, -1);
-    await clearLine(0);
+    moveCursor(0, -1);
+    clearLine(0);
     console.log('Disconnected from the server');
 });
