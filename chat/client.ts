@@ -1,6 +1,6 @@
 import net from 'net';
-import { Direction } from 'readline';
 import readline from 'readline/promises';
+import { Direction } from 'readline';
 
 const rl = readline.createInterface({
     input: process.stdin,
