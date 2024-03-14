@@ -14,7 +14,10 @@ const client = net.createConnection({ host: '::1', port: PORT }, async () => {
 
     fileStream.on('end', () => {
         console.log('The file was successfully uploaded');
-        fileHandle.close();
         client.end();
+    });
+
+    fileStream.on('error', (error) => {
+        console.error('File stream error:', error.message);
     });
 });
