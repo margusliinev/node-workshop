@@ -5,15 +5,20 @@ const server = net.createServer();
 const PORT = 5000;
 
 server.on('connection', async (socket) => {
-    console.log('Client uploading a file...');
+    console.log('Client started uploading a file');
     const fileHandle = await fs.open(`storage/test.txt`, 'w');
     const fileStream = fileHandle.createWriteStream();
 
-    socket.on('data', (data) => {
-        fileStream.write(data);
+    socket.on('data', async (data) => {
+        if (!fileStream.write(data)) socket.pause();
+    });
+
+    fileStream.on('drain', () => {
+        socket.resume();
     });
 
     socket.on('close', () => {
+        console.log('The file was successfully uploaded');
         fileHandle.close();
     });
 

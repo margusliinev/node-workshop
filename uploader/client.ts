@@ -4,12 +4,16 @@ import net from 'net';
 const PORT = 5000;
 
 const client = net.createConnection({ host: '::1', port: PORT }, async () => {
-    const filePath = './test.txt';
+    const filePath = './read.txt';
     const fileHandle = await fs.open(filePath, 'r');
     const fileStream = fileHandle.createReadStream();
 
     fileStream.on('data', (data) => {
-        client.write(data);
+        if (!client.write(data)) client.pause();
+    });
+
+    client.on('drain', () => {
+        client.resume();
     });
 
     fileStream.on('end', () => {
