@@ -6,10 +6,18 @@ const PORT = 5000;
 
 server.on('connection', async (socket) => {
     console.log('Client started uploading a file');
-    const fileHandle = await fs.open(`storage/test.txt`, 'w');
+    const fileHandle = await fs.open(`storage/temp.txt`, 'w');
     const fileStream = fileHandle.createWriteStream();
 
     socket.on('data', async (data) => {
+        const dividerIdx = data.indexOf('-----');
+
+        if (dividerIdx !== -1) {
+            const fileName = data.subarray(10, dividerIdx).toString('utf8');
+            await fs.rename('storage/temp.txt', `storage/${fileName}`);
+        }
+
+        if (dividerIdx !== -1) return;
         if (!fileStream.write(data)) socket.pause();
     });
 
