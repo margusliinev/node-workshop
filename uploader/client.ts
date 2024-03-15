@@ -12,11 +12,20 @@ const socket = net.createConnection({ host: '::1', port: PORT }, async () => {
     }
     const fileHandle = await fs.open(path.basename(fileName), 'r');
     const fileStream = fileHandle.createReadStream();
+    const fileSize = (await fileHandle.stat()).size;
+    let uploadedPercentage = 0;
+    let bytesUploaded = 0;
 
     socket.write(`Filename: ${fileName}-----`);
 
     fileStream.on('data', (data) => {
         if (!socket.write(data)) fileStream.pause();
+        bytesUploaded += data.length;
+        let newUploadedPercentage = Math.floor((bytesUploaded / fileSize) * 100);
+        if (newUploadedPercentage > uploadedPercentage) {
+            uploadedPercentage = newUploadedPercentage;
+            console.log(`Uploaded ${uploadedPercentage}%`);
+        }
     });
 
     socket.on('drain', () => {
