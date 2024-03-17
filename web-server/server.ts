@@ -18,6 +18,13 @@ server.on('request', async (request, response) => {
         case '/favicon.ico':
             await serveStaticFile(response, 'favicon.ico', 'image/x-icon');
             break;
+        case '/login':
+            response.setHeader('Content-Type', 'application/json');
+            response.statusCode = 200;
+            const body = { message: 'Login successful' };
+            response.write(JSON.stringify(body));
+            response.end();
+
         default:
             response.statusCode = 404;
             response.end();
@@ -31,6 +38,10 @@ async function serveStaticFile(response: http.ServerResponse, path: string, cont
         response.setHeader('Content-Type', contentType);
         response.statusCode = 200;
         fileStream.pipe(response);
+        fileStream.on('close', () => {
+            fileHandle.close();
+            response.end();
+        });
     } catch (error) {
         console.error(error);
         response.statusCode = 500;
