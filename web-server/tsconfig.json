@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "forceConsistentCasingInFileNames": true,
+        "noUncheckedIndexedAccess": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "isolatedModules": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "moduleResolution": "Node",
+        "module": "CommonJS",
+        "target": "ES2022",
+        "outDir": "dist"
+    },
+    "exclude": ["node_modules"]
+}
