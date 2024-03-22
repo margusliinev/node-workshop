@@ -5,7 +5,7 @@
     "main": "dist/app.js",
     "scripts": {
         "dev": "ts-node-dev --respawn --transpile-only app.ts",
-        "build": "npx tsc",
+        "build": "npx tsc && gcc number_formatter.c -o ./dist/number_formatter",
         "start": "node dist/app.js"
     },
     "devDependencies": {

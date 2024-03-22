@@ -3,14 +3,20 @@
 
 int main() {
     
-    FILE *outputFile = fopen("./dest.txt", "w")
+    FILE *outputFile = fopen("./dest.txt", "w");
+    if (outputFile == NULL) {
+        perror("Error opening file");
+        return 1;
+    }
+
     char c = fgetc(stdin);
 
     while (c != EOF) {
-        printf(outputFile, "%c", c);
+        fprintf(outputFile, "%c", c);
         fflush(outputFile);
         c = fgetc(stdin);
     }
 
-    exit(0)
+    fclose(outputFile);
+    exit(0);
 }

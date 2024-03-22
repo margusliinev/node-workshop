@@ -1,7 +1,9 @@
 import { spawn } from 'child_process';
 import fs from 'fs/promises';
+import path from 'path';
 
-const numberFormatter = spawn('number_formatter', ['./dest.txt', '$', ',']);
+const numberFormatterPath = path.join(__dirname, 'number_formatter');
+const numberFormatter = spawn(numberFormatterPath, ['./dest.txt', '$', ',']);
 
 numberFormatter.stdout.on('data', (data) => {
     console.log(`Stdout: ${data}`);
