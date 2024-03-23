@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main() {
+int main(int argc, char *argv[]) {
     
-    FILE *outputFile = fopen("./dest.txt", "w");
+    FILE *outputFile = fopen(argv[1], "w");
     if (outputFile == NULL) {
         perror("Error opening file");
         return 1;
